@@ -1,0 +1,37 @@
+[
+  { 
+    "title": "Languages",          
+    "items": ["Python","TypeScript","JavaScript","SQL"],                                                                 
+    "span": "half" 
+  },
+  { 
+    "title": "Frameworks",         
+    "items": ["FastAPI","Flask","Angular"],                                                                              
+    "span": "half" 
+  },
+  { 
+    "title": "AI Integration",     
+    "items": ["LLM Integration","Prompt Engineering","RAG Pipelines","Structured Output","Inference Pipelines","Tool Calling"], 
+    "span": "wide" 
+  },
+  { 
+    "title": "Backend Engineering",
+    "items": ["REST API Design","Microservices","Event-Driven","High-Concurrency","WebRTC","Pub/Sub"],                   
+    "span": "wide" 
+  },
+  { 
+    "title": "Data",               
+    "items": ["MongoDB","Redis","Pandas","NumPy","JSON Processing"],                                                     
+    "span": "" 
+  },
+  { 
+    "title": "DevOps & Cloud",     
+    "items": ["Docker","CI/CD","AWS EC2","AWS S3","Azure"],                                                              
+    "span": "" 
+  },
+  { 
+    "title": "Practices",          
+    "items": ["OOP","Clean Arch","SOLID","Agile/Scrum"],                                                                 
+    "span": ""
+  }
+]

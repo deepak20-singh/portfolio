@@ -1,0 +1,53 @@
+@media (max-width: 980px) {
+  .about-grid { grid-template-columns: 1fr; }
+  .about-photo { max-width: 260px; }
+  .skill-cat, .skill-cat.wide, .skill-cat.half { grid-column: span 12; }
+  .stats-strip { grid-template-columns: 1fr 1fr; }
+  .stat:nth-child(2) { border-right: 0; }
+  .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--border); }
+  .project { grid-template-columns: 1fr; }
+  .project-thumb { aspect-ratio: 16/9; max-width: none; }
+  .project-bullets { grid-template-columns: 1fr; }
+  .hero-name { font-size: clamp(44px, 13vw, 130px); }
+  .hero-name .gap { width: .35em; }
+  .hero-avatar { width: 100%; height: 62vh; max-height: none; }
+  .contact { grid-template-columns: 1fr; }
+  .contact-left { position: static; }
+  .resume-cta { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  nav.top { display: none; }
+}
+
+@media (max-width: 560px) {
+  .container { padding: 0 20px; }
+  .hero { padding-bottom: 60px; }
+  .hero-name { font-size: clamp(40px, 13vw, 78px); gap: .1em; }
+  .hero-avatar { height: 54vh; }
+  .hero-foot { grid-template-columns: 1fr; margin-top: 24px; gap: 16px; }
+  .hero-foot .col, .hero-foot .col.right { text-align: left; justify-self: start; max-width: none; font-size: 12px; }
+  .hero-tag { bottom: -22px; font-size: 11px; }
+  section { padding: 80px 0; }
+  .section-head { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 32px; }
+  .section-title { font-size: clamp(36px, 8vw, 56px); }
+  .about-card { padding: 22px; }
+  .about-card h3 { font-size: 22px; }
+  .about-card p { font-size: 15px; }
+  .meta-row { grid-template-columns: 1fr; gap: 14px; }
+  .stats-strip { grid-template-columns: 1fr; }
+  .stat { border-right: 0; border-bottom: 1px solid var(--border); padding: 24px 18px; }
+  .stat:last-child { border-bottom: 0; }
+  .stat .num { font-size: 48px; }
+  .form-row { grid-template-columns: 1fr; }
+  .form { padding: 22px; }
+  .resume-cta { padding: 28px; gap: 24px; }
+  .resume-cta h3 { font-size: 28px; }
+  .project { padding: 20px; gap: 20px; }
+  .project-title { font-size: 24px; }
+  .project-bullets { grid-template-columns: 1fr; }
+  .skills-grid { gap: 12px; }
+  .skill-cat { padding: 18px; }
+  .contact-left h2 { font-size: clamp(42px, 10vw, 60px); }
+  .contact-quick a { padding: 12px 14px; font-size: 12px; }
+  .btn { padding: 12px 18px; font-size: 12px; }
+  footer { padding: 32px 0 24px; font-size: 11px; }
+}

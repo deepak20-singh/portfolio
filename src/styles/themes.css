@@ -1,0 +1,34 @@
+/* ── Light mode ── */
+body.light {
+  --bg-1: #f4efe8; --bg-2: #e9e2d6; --surface: #ffffff; --surface-2: #f6f1ea;
+  --text: #1a2429; --text-dim: #4a5a64; --text-mute: #7e8a92;
+  --border: rgba(20,30,35,.1); --border-strong: rgba(20,30,35,.18);
+}
+body.light .status, body.light nav.top, body.light .rail .socials a { background: rgba(255,255,255,.6); }
+body.light::before {
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+}
+body.light .hero-name { color: #1a2429; text-shadow: none; }
+body.light .hero-name .gap { background: #1a2429; }
+body.light .btn { color: #fff8f0; }
+
+/* ── Density ── */
+body.dense { --density: .75; }
+body.airy  { --density: 1.25; }
+
+/* ── Motion ── */
+body.calm     .tech-track { animation-duration: 80s; }
+body.energetic .tech-track { animation-duration: 22s; }
+
+/* ── Display family ── */
+body.family-sans { --display: 'Space Grotesk', sans-serif; }
+body.family-sans .hero-name { font-weight: 700; letter-spacing: -.06em; }
+body.family-mono { --display: 'JetBrains Mono', monospace; }
+body.family-mono .hero-name { font-weight: 700; letter-spacing: -.04em; font-size: clamp(70px,14vw,200px); }
+
+/* ── Hue swaps ── */
+body.hue-charcoal { --bg-1: #171717; --bg-2: #0c0c0c; --surface: #1f1f1f; --surface-2: #262626; }
+body.hue-wine     { --bg-1: #2a1418; --bg-2: #1a0a0e; --surface: #3a1c22; --surface-2: #4a242c; }
+body.hue-forest   { --bg-1: #0f1f1b; --bg-2: #081411; --surface: #16302a; --surface-2: #1e3d36; }

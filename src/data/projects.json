@@ -1,0 +1,47 @@
+[
+  {
+    "id": "avatar",
+    "year": "2023 — Present",
+    "role": "Lead Backend",
+    "badge": "Flagship",
+    "title": "3D AI Avatar Interaction System",
+    "desc": "Real-time conversational LLM avatar — the backend that makes a 3D character feel like it's actually listening. Prompt engineering, structured output validation, and WebRTC stitched together for low-latency turns.",
+    "stack": ["FastAPI","LLMs","Prompt Eng","WebRTC","AWS","Docker"],
+    "bullets": [
+      { "strong": "10,000+ msgs/hour", "rest": "sustained throughput, sub-150ms latency" },
+      { "strong": "30% reliability lift", "rest": "via structured output validation" },
+      { "strong": "Horizontal scale", "rest": "on AWS w/ Dockerised microservices" },
+      { "strong": "RAG grounding", "rest": "reduced hallucinations measurably" }
+    ]
+  },
+  {
+    "id": "session",
+    "year": "2023",
+    "role": "Backend Engineer",
+    "badge": "Production",
+    "title": "Real-Time Session Management Dashboard",
+    "desc": "Operator dashboard for live session telemetry. RAG-grounded responses, role-based access, and a Redis-driven event bus that keeps the UI in lockstep with the backend.",
+    "stack": ["Flask","Redis","MongoDB","Microservices","CI/CD"],
+    "bullets": [
+      { "strong": "<100ms refresh", "rest": "via Redis caching + pub/sub" },
+      { "strong": "40% fewer hallucinations", "rest": "with RAG over domain data" },
+      { "strong": "RBAC", "rest": "tightened access governance" },
+      { "strong": "25% drop", "rest": "in support tickets after launch" }
+    ]
+  },
+  {
+    "id": "health",
+    "year": "2023",
+    "role": "Full-stack",
+    "badge": "Healthcare",
+    "title": "Health Monitoring Web Application",
+    "desc": "Full-stack system for emotionally responsive medical dialogues, powered by an LLM avatar grounded in domain data. Inference deployed across AWS EC2 and Azure App Services.",
+    "stack": ["LLMs","RAG","Flask","Redis","AWS","Azure"],
+    "bullets": [
+      { "strong": "Modular APIs", "rest": "handling 10k+ message exchanges/hour" },
+      { "strong": "35% faster", "rest": "real-time event handling via Redis tuning" },
+      { "strong": "Multi-cloud", "rest": "EC2 + Azure App Services for HA" },
+      { "strong": "p95 < 150ms", "rest": "across the inference path" }
+    ]
+  }
+]
