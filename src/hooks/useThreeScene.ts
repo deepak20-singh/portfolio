@@ -168,33 +168,11 @@ export function useThreeScene(opts: ThreeSceneOpts = {}) {
           }
         }
 
-        // Initial avatar load, then greet with wave → settle into idle_4
+        // Load avatar GLB first
         await mountAvatar(avatarUrl);
         if (cancelled) return;
 
-        // Preload both clips in parallel
-        const [greetClip, idleClip] = await Promise.all([
-          loadFBXClip(opts.initialClips?.[0] ?? DEFAULT_GREET_URL),
-          loadFBXClip(opts.initialClips?.[1] ?? DEFAULT_IDLE_URL),
-        ]);
-        if (cancelled) return;
-
-        // Play greeting wave
-        if (greetClip) {
-          currentClipUrl = opts.initialClips?.[0] ?? DEFAULT_GREET_URL;
-          playClipOnMixer(greetClip);
-        }
-
-        // After greeting duration, switch to idle and stay there
-        cycleTimer = setTimeout(() => {
-          if (cancelled) return;
-          if (idleClip) {
-            currentClipUrl = opts.initialClips?.[1] ?? DEFAULT_IDLE_URL;
-            playClipOnMixer(idleClip);
-          }
-        }, opts.cyclesMs ?? DEFAULT_GREET_DURATION) as unknown as ReturnType<typeof setInterval>;
-
-        // Expose imperative API
+        // Expose imperative API immediately after avatar is ready
         apiRef.current = {
           playClip: (url) => {
             if (clipLoading) { pendingClip = url; return; }
@@ -246,6 +224,8 @@ export function useThreeScene(opts: ThreeSceneOpts = {}) {
           renderer.render(scene, camera);
           raf = requestAnimationFrame(tick);
         }
+
+        // Start rendering immediately — avatar appears without waiting for FBX clips
         tick();
 
         const ro = new ResizeObserver(() => {
@@ -272,6 +252,27 @@ export function useThreeScene(opts: ThreeSceneOpts = {}) {
           renderer.dispose();
           if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
         };
+
+        // Load initial animation clips after the first frame is already rendering.
+        // This decouples avatar LCP from FBX network time.
+        const [greetClip, idleClip] = await Promise.all([
+          loadFBXClip(opts.initialClips?.[0] ?? DEFAULT_GREET_URL),
+          loadFBXClip(opts.initialClips?.[1] ?? DEFAULT_IDLE_URL),
+        ]);
+        if (cancelled) return;
+
+        if (greetClip) {
+          currentClipUrl = opts.initialClips?.[0] ?? DEFAULT_GREET_URL;
+          playClipOnMixer(greetClip);
+        }
+
+        cycleTimer = setTimeout(() => {
+          if (cancelled) return;
+          if (idleClip) {
+            currentClipUrl = opts.initialClips?.[1] ?? DEFAULT_IDLE_URL;
+            playClipOnMixer(idleClip);
+          }
+        }, opts.cyclesMs ?? DEFAULT_GREET_DURATION) as unknown as ReturnType<typeof setInterval>;
       } catch (err) {
         if (!cancelled) console.error('[useThreeScene] mount failed:', err);
       }

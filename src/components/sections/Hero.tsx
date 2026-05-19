@@ -1,5 +1,10 @@
-import { useRef, useState, useEffect } from 'react';
-import { AvatarViewer, type AvatarViewerHandle } from '../media/AvatarViewer';
+import { useRef, useState, useEffect, lazy, Suspense } from 'react';
+import type { AvatarViewerHandle } from '../media/AvatarViewer';
+
+// Deferred chunk — Three.js (~1.5 MB) loads after first paint, not blocking it
+const AvatarViewer = lazy(() =>
+  import('../media/AvatarViewer').then(m => ({ default: m.AvatarViewer }))
+);
 
 function useMobileTime() {
   const [time, setTime] = useState('');
@@ -111,12 +116,14 @@ export function Hero() {
           <div className="hero-avatar reveal">
             <div className="avatar-frame">
               <div className="avatar-ground"></div>
-              <AvatarViewer
-                ref={viewerRef}
-                fov={22} camY={1.05} camZ={4.5} lookAtRel={0.58}
-                avatarUrl="/uploads/second_avatar.glb"
-                interactive={false} autoRotate={false} startRotY={0}
-              />
+              <Suspense fallback={<div className="avatar-3d" />}>
+                <AvatarViewer
+                  ref={viewerRef}
+                  fov={22} camY={1.05} camZ={4.5} lookAtRel={0.58}
+                  avatarUrl="/uploads/second_avatar.glb"
+                  interactive={false} autoRotate={false} startRotY={0}
+                />
+              </Suspense>
 
               {/* Animation picker control */}
               <div className="hero-avatar-controls">

@@ -1,4 +1,8 @@
-import { AvatarViewer } from '../media/AvatarViewer';
+import { lazy, Suspense } from 'react';
+
+const AvatarViewer = lazy(() =>
+  import('../media/AvatarViewer').then(m => ({ default: m.AvatarViewer }))
+);
 
 export function ResumeCTA() {
   return (
@@ -19,12 +23,14 @@ export function ResumeCTA() {
             </div>
           </div>
           <div style={{ display: 'grid', placeItems: 'center', position: 'relative', minHeight: 280 }}>
-            <AvatarViewer
-              fov={20} camY={1.10} camZ={4.3} lookAtRel={0.62}
-              avatarUrl="/uploads/first_avatar.glb"
-              interactive={false} autoRotate={false} startRotY={0}
-              style={{ width: 280, height: 360 }}
-            />
+            <Suspense fallback={<div style={{ width: 280, height: 360 }} />}>
+              <AvatarViewer
+                fov={20} camY={1.10} camZ={4.3} lookAtRel={0.62}
+                avatarUrl="/uploads/first_avatar.glb"
+                interactive={false} autoRotate={false} startRotY={0}
+                style={{ width: 280, height: 360 }}
+              />
+            </Suspense>
           </div>
         </div>
       </div>
