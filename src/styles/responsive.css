@@ -19,13 +19,109 @@
 }
 
 @media (max-width: 560px) {
-  .container { padding: 0 20px; }
-  .hero { padding-bottom: 60px; }
-  .hero-name { font-size: clamp(40px, 13vw, 78px); gap: .1em; }
-  .hero-avatar { height: 54vh; }
-  .hero-foot { grid-template-columns: 1fr; margin-top: 24px; gap: 16px; }
-  .hero-foot .col, .hero-foot .col.right { text-align: left; justify-self: start; max-width: none; font-size: 12px; }
-  .hero-tag { bottom: -22px; font-size: 11px; }
+  .container { padding: 0 18px; }
+
+  /* ── Hero: V1 Classic Stacked ── */
+  .hero {
+    padding-top: 0;
+    padding-bottom: 32px;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* override base flex-end */
+  }
+  /* Hide desktop fixed status pill — mobile topbar carries this info */
+  .status { display: none; }
+  .hero-mob-topbar { display: flex; }
+
+  /* Stack avatar + name vertically */
+  .hero-grid {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    align-items: stretch;
+    position: relative;
+  }
+
+  /* Avatar: full width, tall, with visible bordered frame */
+  .hero-avatar {
+    position: relative;
+    display: block; /* override desktop display:grid */
+    left: auto; top: auto; transform: none;
+    width: 100%; height: 60vh;
+    max-height: none;
+    flex-shrink: 0;
+    margin-bottom: -56px; /* name overlaps avatar bottom */
+  }
+  /* Override the reveal animations that bake translateX(-50%) for desktop */
+  .hero-avatar.reveal       { transform: translateY(20px); }
+  .hero-avatar.reveal.in    { transform: translateY(0); }
+  .hero-avatar .avatar-frame {
+    height: 100%;
+    border-radius: 18px;
+    border: 1px dashed var(--border-strong);
+    overflow: hidden;
+    background:
+      radial-gradient(70% 60% at 50% 35%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 70%),
+      radial-gradient(120% 80% at 50% 110%, rgba(0,0,0,.45), transparent 60%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,.04) 0 10px, transparent 10px 20px),
+      var(--surface);
+  }
+  .hero-avatar .avatar-frame::after {
+    display: block;
+    background: linear-gradient(180deg, transparent 70%, color-mix(in oklab, var(--bg-1) 70%, transparent) 100%);
+  }
+
+  /* Animate button: bottom-right of avatar frame */
+  .hero-avatar-controls {
+    position: absolute;
+    left: auto !important;
+    right: 14px;
+    transform: none !important;
+    bottom: 14px;
+  }
+
+  /* Name: stacked vertically, left-aligned, overlaps avatar bottom */
+  .hero-name {
+    z-index: 5; /* above hero-avatar's z-index:4 so name sits on top */
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: clamp(72px, 20vw, 84px);
+    line-height: .84;
+    gap: 0;
+    width: 100%;
+    padding: 0;
+    position: relative;
+    text-shadow: 0 8px 24px rgba(0,0,0,.7), 0 2px 6px rgba(0,0,0,.9);
+  }
+  .hero-name .gap { display: none; }
+  /* Second word: italic accent + period via pseudo */
+  .hero-name .w2 {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .hero-name .w2::after { content: '.'; }
+
+  /* Footer row: two equal columns */
+  .hero-foot {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 16px;
+    gap: 12px;
+    align-items: start;
+  }
+  .hero-foot .col { font-size: 10.5px; text-align: left; justify-self: start; max-width: none; }
+  .hero-foot .col.right {
+    text-align: right; justify-self: end; margin-right: 0; max-width: none;
+    font-size: 10.5px;
+    color: transparent; /* hides raw text nodes; strong keeps its own color */
+  }
+  .hero-foot .col.right strong { display: block; }
+
+  /* Scroll hint */
+  .hero-tag { bottom: -18px; font-size: 9px; letter-spacing: .22em; }
   section { padding: 80px 0; }
   .section-head { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 32px; }
   .section-title { font-size: clamp(36px, 8vw, 56px); }

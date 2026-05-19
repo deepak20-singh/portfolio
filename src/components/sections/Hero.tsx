@@ -1,6 +1,21 @@
 import { useRef, useState, useEffect } from 'react';
 import { AvatarViewer, type AvatarViewerHandle } from '../media/AvatarViewer';
 
+function useMobileTime() {
+  const [time, setTime] = useState('');
+  useEffect(() => {
+    const update = () => {
+      setTime(new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', hour12: false,
+      }));
+    };
+    update();
+    const t = setInterval(update, 30000);
+    return () => clearInterval(t);
+  }, []);
+  return time;
+}
+
 interface AnimEntry {
   url:      string;
   label:    string;
@@ -38,6 +53,7 @@ const ANIMATIONS: AnimEntry[] = [
 const ANIM_GROUPS = Array.from(new Set(ANIMATIONS.map(a => a.group)));
 
 export function Hero() {
+  const mobileTime     = useMobileTime();
   const viewerRef      = useRef<AvatarViewerHandle>(null);
   const pickerRef      = useRef<HTMLDivElement>(null);
   const animBtnRef     = useRef<HTMLButtonElement>(null);
@@ -79,6 +95,17 @@ export function Hero() {
 
   return (
     <section id="home" className="hero">
+      {/* Mobile-only topbar — V1 Classic Stacked */}
+      <div className="hero-mob-topbar">
+        <button className="hero-mob-menu" aria-label="Open menu">
+          <span></span><span></span><span></span>
+        </button>
+        <span className="hero-mob-brand">DEEPAK · SINGH · '26</span>
+        <div className="hero-mob-status">
+          <span className="dot"></span>BLR · {mobileTime}
+        </div>
+      </div>
+
       <div className="container">
         <div className="hero-grid">
           <div className="hero-avatar reveal">
@@ -135,7 +162,7 @@ export function Hero() {
           <h1 className="hero-name reveal" data-d="1">
             <span className="word">DEEPAK</span>
             <span className="gap" aria-hidden="true"></span>
-            <span className="word">SINGH</span>
+            <span className="word w2">SINGH</span>
           </h1>
         </div>
 
