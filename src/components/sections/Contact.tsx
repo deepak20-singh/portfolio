@@ -32,8 +32,25 @@ function ContactForm() {
     if (Object.keys(er).length) return;
 
     setState('sending');
-    await new Promise((r) => setTimeout(r, 900));
-    setState('sent');
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: '241df8ff-a972-442a-b1cc-d86e6411e5b6',
+          name:    form.name,
+          email:   form.email,
+          company: form.company,
+          topic:   form.topic,
+          message: form.message,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) setState('sent');
+      else setState('idle');
+    } catch {
+      setState('idle');
+    }
   };
 
   if (state === 'sent') {
