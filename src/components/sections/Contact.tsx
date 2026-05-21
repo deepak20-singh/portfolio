@@ -38,11 +38,14 @@ function ContactForm() {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           access_key: '241df8ff-a972-442a-b1cc-d86e6411e5b6',
-          name:    form.name,
-          email:   form.email,
-          company: form.company,
-          topic:   form.topic,
-          message: form.message,
+          subject:    `New message from ${form.name} — ${form.topic}`,
+          from_name:  form.name,
+          replyto:    form.email,
+          'Full Name':    form.name,
+          'Email':        form.email,
+          'Company':      form.company || '—',
+          'Topic':        form.topic,
+          'Message':      form.message,
         }),
       });
       const data = await res.json();
