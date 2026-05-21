@@ -1,12 +1,26 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useRef, useState, useEffect } from 'react';
 
 const AvatarViewer = lazy(() =>
   import('../media/AvatarViewer').then(m => ({ default: m.AvatarViewer }))
 );
 
 export function ResumeCTA() {
+  const sectionRef                    = useRef<HTMLElement>(null);
+  const [avatarMounted, setMounted]   = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setMounted(true); io.disconnect(); } },
+      { rootMargin: '200px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <section id="resume" style={{ paddingTop: 24, paddingBottom: 80 }}>
+    <section ref={sectionRef} id="resume" style={{ paddingTop: 24, paddingBottom: 80 }}>
       <div className="container">
         <div className="resume-cta reveal">
           <div>
@@ -23,14 +37,17 @@ export function ResumeCTA() {
             </div>
           </div>
           <div style={{ display: 'grid', placeItems: 'center', position: 'relative', minHeight: 280 }}>
-            <Suspense fallback={<div style={{ width: 280, height: 360 }} />}>
-              <AvatarViewer
-                fov={20} camY={1.10} camZ={4.3} lookAtRel={0.62}
-                avatarUrl="/uploads/first_avatar.glb"
-                interactive={false} autoRotate={false} startRotY={0}
-                style={{ width: 280, height: 360 }}
-              />
-            </Suspense>
+            {avatarMounted
+              ? <Suspense fallback={<div style={{ width: 280, height: 360 }} />}>
+                  <AvatarViewer
+                    fov={20} camY={1.10} camZ={4.3} lookAtRel={0.62}
+                    avatarUrl="/uploads/first_avatar.glb"
+                    interactive={false} autoRotate={false} startRotY={0}
+                    style={{ width: 280, height: 360 }}
+                  />
+                </Suspense>
+              : <div style={{ width: 280, height: 360 }} />
+            }
           </div>
         </div>
       </div>

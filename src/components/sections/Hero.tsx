@@ -64,8 +64,20 @@ export function Hero() {
   const animBtnRef     = useRef<HTMLButtonElement>(null);
   const revertTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [pickerOpen, setPickerOpen] = useState(false);
-  const [activeAnim, setActiveAnim] = useState('');
+  const [pickerOpen,    setPickerOpen]    = useState(false);
+  const [activeAnim,    setActiveAnim]    = useState('');
+  // Defer Three.js until the browser is idle so it doesn't block FCP / reveal animations
+  const [avatarMounted, setAvatarMounted] = useState(false);
+
+  // Mount Three.js only after the browser goes idle — keeps it off the critical render path
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(() => setAvatarMounted(true), { timeout: 4000 });
+      return () => cancelIdleCallback(id);
+    }
+    const t = setTimeout(() => setAvatarMounted(true), 300);
+    return () => clearTimeout(t);
+  }, []);
 
   // Clear revert timer on unmount
   useEffect(() => () => { if (revertTimerRef.current) clearTimeout(revertTimerRef.current); }, []);
@@ -116,14 +128,17 @@ export function Hero() {
           <div className="hero-avatar reveal">
             <div className="avatar-frame">
               <div className="avatar-ground"></div>
-              <Suspense fallback={<div className="avatar-3d" />}>
-                <AvatarViewer
-                  ref={viewerRef}
-                  fov={22} camY={1.05} camZ={4.5} lookAtRel={0.58}
-                  avatarUrl="/uploads/second_avatar.glb"
-                  interactive={false} autoRotate={false} startRotY={0}
-                />
-              </Suspense>
+              {avatarMounted
+                ? <Suspense fallback={<div className="avatar-3d" />}>
+                    <AvatarViewer
+                      ref={viewerRef}
+                      fov={22} camY={1.05} camZ={4.5} lookAtRel={0.58}
+                      avatarUrl="/uploads/second_avatar.glb"
+                      interactive={false} autoRotate={false} startRotY={0}
+                    />
+                  </Suspense>
+                : <div className="avatar-3d" />
+              }
 
               {/* Animation picker control */}
               <div className="hero-avatar-controls">
