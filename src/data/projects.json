@@ -1,6 +1,7 @@
 [
   {
     "id": "avatar",
+    "thumb": "https://picsum.photos/seed/avatar-ai/800/450",
     "year": "2023 — Present",
     "role": "Lead Backend",
     "badge": "Flagship",
@@ -16,6 +17,7 @@
   },
   {
     "id": "session",
+    "thumb": "https://picsum.photos/seed/session-dash/800/450",
     "year": "2023",
     "role": "Backend Engineer",
     "badge": "Production",
@@ -31,6 +33,7 @@
   },
   {
     "id": "health",
+    "thumb": "https://picsum.photos/seed/health-app/800/450",
     "year": "2023",
     "role": "Full-stack",
     "badge": "Healthcare",

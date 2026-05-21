@@ -451,35 +451,3 @@ footer {
 }
 .avatar-tag .led { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-/* ── ImageSlot component ── */
-.image-slot-wrap {
-  position: relative; display: inline-block; overflow: hidden;
-  background: rgba(0,0,0,.04);
-}
-.image-slot-empty {
-  position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 6px;
-  text-align: center; padding: 12px; box-sizing: border-box;
-  cursor: pointer; user-select: none; color: rgba(255,255,255,.35);
-  font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
-  text-transform: uppercase;
-  border: 1.5px dashed rgba(255,255,255,.2); border-radius: inherit;
-  transition: border-color .12s;
-}
-.image-slot-empty:hover { border-color: var(--accent); color: var(--text-mute); }
-.image-slot-wrap[data-over] .image-slot-empty { border-color: var(--accent); background: rgba(224,122,95,.07); }
-.image-slot-img {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; object-position: center; display: block;
-}
-.image-slot-controls {
-  position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 6px; opacity: 0; pointer-events: none; transition: opacity .12s; white-space: nowrap; z-index: 2;
-}
-.image-slot-wrap:hover .image-slot-controls { opacity: 1; pointer-events: auto; }
-.image-slot-controls button {
-  appearance: none; border: 0; border-radius: 6px; padding: 5px 10px; cursor: pointer;
-  background: rgba(0,0,0,.65); color: #fff; font: 11px/1 system-ui,-apple-system,sans-serif;
-  backdrop-filter: blur(6px);
-}
-.image-slot-controls button:hover { background: rgba(0,0,0,.8); }

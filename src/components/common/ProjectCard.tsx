@@ -1,7 +1,6 @@
-import { ImageSlot } from '../media/ImageSlot';
-
 export interface Project {
   id: string;
+  thumb?: string;
   year: string;
   role: string;
   badge: string;
@@ -17,13 +16,13 @@ export function ProjectCard({ p, idx, total }: Props) {
   return (
     <article className="project reveal" data-d={String((idx % 3) + 1)}>
       <div className="project-thumb">
-        <ImageSlot
-          slotId={`proj-${p.id}`}
-          shape="rounded"
-          radius={10}
-          placeholder={`${p.title} thumbnail`}
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
-        />
+        {p.thumb && (
+          <img
+            src={p.thumb}
+            alt={`${p.title} thumbnail`}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }}
+          />
+        )}
         <span className="badge">{p.badge}</span>
       </div>
       <div>
