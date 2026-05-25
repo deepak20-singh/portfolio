@@ -125,6 +125,7 @@ export function Hero() {
 
       <div className="container">
         <div className="hero-grid">
+          {/* Full-width absolute layer — avatar can animate freely without clipping */}
           <div className="hero-avatar reveal">
             <div className="avatar-frame">
               <div className="avatar-ground"></div>
@@ -132,9 +133,16 @@ export function Hero() {
                 ? <Suspense fallback={<div className="avatar-3d" />}>
                     <AvatarViewer
                       ref={viewerRef}
-                      fov={22} camY={1.05} camZ={4.5} lookAtRel={0.58}
+                      fov={22} camY={1.05} camZ={5} lookAtRel={0.58}
                       avatarUrl="/uploads/second_avatar.glb"
                       interactive={false} autoRotate={false} startRotY={0}
+                      initialClips={[
+                        '/uploads/animate_idle_wave_3.fbx',  // Stage 1 — Dance 2
+                        '/uploads/animate_idle_wave.fbx',    // Stage 2 — Wave
+                        '/uploads/animate_idle_neutral.fbx', // Stage 3 — Neutral (loops forever)
+                      ]}
+                      cyclesMs={15000}
+                      cycles2Ms={5000}
                     />
                   </Suspense>
                 : <div className="avatar-3d" />
@@ -181,26 +189,26 @@ export function Hero() {
             </div>
           </div>
 
+          <div className="hero-foot">
+            <div className="col reveal" data-d="2">
+              <strong>{'>'} whoami</strong><br />
+              Python backend engineer building scalable AI systems —
+              real-time LLM pipelines, microservices, and the setup
+              that keeps the flow running.
+            </div>
+            <div className="col right reveal" data-d="3">
+              <strong>Software Engineer @ Openstream.ai</strong><br />
+              Exploring how AI and real-time systems can merge
+              into something that feels less like software
+              and more like conversation.
+            </div>
+          </div>
+
           <h1 className="hero-name reveal" data-d="1">
             <span className="word">DEEPAK</span>
             <span className="gap" aria-hidden="true"></span>
             <span className="word w2">SINGH</span>
           </h1>
-        </div>
-
-        <div className="hero-foot">
-          <div className="col reveal" data-d="2">
-            <strong>{'>'} whoami</strong><br />
-            Python backend engineer building scalable AI systems —
-            real-time LLM pipelines, microservices, and the setup
-            that keeps the flow running.
-          </div>
-          <div className="col right reveal" data-d="3">
-            <strong>Software Engineer @ Openstream.ai</strong><br />
-            Exploring how AI and real-time systems can merge
-            into something that feels less like software
-            and more like conversation.
-          </div>
         </div>
 
         <div className="hero-tag reveal" data-d="4">

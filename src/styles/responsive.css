@@ -1,19 +1,20 @@
 @media (max-width: 980px) {
-  .about-grid { grid-template-columns: 1fr; }
+  main { padding-left: 0; }
+.about-grid { grid-template-columns: 1fr; }
   .about-photo { max-width: 260px; }
   .skill-cat, .skill-cat.wide, .skill-cat.half { grid-column: span 12; }
   .stats-strip { grid-template-columns: 1fr 1fr; }
   .stat:nth-child(2) { border-right: 0; }
   .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 1px solid var(--border); }
-  .project { grid-template-columns: 1fr; }
-  .project-thumb { aspect-ratio: 16/9; max-width: none; }
-  .project-bullets { grid-template-columns: 1fr; }
+  .projects-asymmetric { grid-template-columns: 1fr; }
+  .proj-bullets { grid-template-columns: 1fr; }
+  .proj-mini:hover { transform: none; }
   .hero-name { font-size: clamp(44px, 13vw, 130px); }
   .hero-name .gap { width: .35em; }
   .hero-avatar { width: 100%; height: 62vh; max-height: none; }
-  .contact { grid-template-columns: 1fr; }
-  .contact-left { position: static; }
-  .resume-cta { grid-template-columns: 1fr; }
+  .cr-grid { grid-template-columns: 1fr; }
+  .cr-right { position: static; }
+  .cr-avatar-wrap { height: 320px; border-radius: var(--radius) var(--radius) 0 0; }
   .rail { display: none; }
   nav.top { display: none; }
 }
@@ -44,20 +45,17 @@
     position: relative;
   }
 
-  /* Avatar: full width, tall, with visible bordered frame */
+  /* Avatar: full-width block above the name */
   .hero-avatar {
     position: relative;
-    display: block; /* override desktop display:grid */
-    left: auto; top: auto; transform: none;
-    width: 100%; height: 60vh;
+    left: auto; top: auto;
+    width: 100%; height: 72vh;
     max-height: none;
     flex-shrink: 0;
-    margin-bottom: 12px;
+    margin-bottom: -32px;
   }
-  /* Override the reveal animations that bake translateX(-50%) for desktop */
   .hero-avatar.reveal       { transform: translateY(20px); }
   .hero-avatar.reveal.in    { transform: translateY(0); }
-  /* Transparent frame — no border, no background box */
   .hero-avatar .avatar-frame {
     height: 100%;
     border-radius: 0;
@@ -67,19 +65,20 @@
   }
   .hero-avatar .avatar-frame::after { display: none; }
 
-  /* Animate button: bottom-right of avatar frame */
+  /* Animate button: top-right on mobile too */
   .hero-avatar-controls {
     position: absolute;
-    left: auto !important;
+    top: 14px;
     right: 14px;
+    bottom: auto;
+    left: auto !important;
     transform: none !important;
-    bottom: 14px;
   }
 
   /* Name: stacked vertically, left-aligned */
   .hero-name {
     z-index: 3;
-    pointer-events: none; /* let clicks pass through to animate button */
+    pointer-events: none;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
@@ -93,11 +92,7 @@
     text-shadow: 0 12px 30px rgba(0,0,0,.55);
   }
   .hero-name .gap { display: none; }
-  /* Second word: italic accent + period via pseudo */
-  .hero-name .w2 {
-    color: var(--accent);
-    font-style: italic;
-  }
+  .hero-name .w2 { color: var(--accent); font-style: italic; }
   .hero-name .w2::after { content: '.'; }
 
   /* Footer row: two equal columns */
@@ -130,15 +125,14 @@
   .stat .num { font-size: 48px; }
   .form-row { grid-template-columns: 1fr; }
   .form { padding: 22px; }
-  .resume-cta { padding: 28px; gap: 24px; }
-  .resume-cta h3 { font-size: 28px; }
+
   .project { padding: 20px; gap: 20px; }
   .project-title { font-size: 24px; }
   .project-bullets { grid-template-columns: 1fr; }
   .skills-grid { gap: 12px; }
   .skill-cat { padding: 18px; }
-  .contact-left h2 { font-size: clamp(42px, 10vw, 60px); }
-  .contact-quick a { padding: 12px 14px; font-size: 12px; }
+  .cr-heading { font-size: clamp(36px, 9vw, 56px); }
+  .contact-quick a { padding: 10px 14px; font-size: 11px; }
   .btn { padding: 12px 18px; font-size: 12px; }
   footer { padding: 32px 0 24px; font-size: 11px; }
 }

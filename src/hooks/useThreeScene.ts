@@ -57,6 +57,7 @@ export interface ThreeSceneOpts {
   autoRotateDelay?: number;
   autoRotateSpeed?: number;
   cyclesMs?:        number;
+  cycles2Ms?:       number; // duration of second clip before settling into the third (idle)
 }
 
 const DEFAULT_AVATAR        = '/uploads/first_avatar.glb';
@@ -255,22 +256,36 @@ export function useThreeScene(opts: ThreeSceneOpts = {}) {
 
         // Load initial animation clips after the first frame is already rendering.
         // This decouples avatar LCP from FBX network time.
-        const [greetClip, idleClip] = await Promise.all([
+        const has3Stages = !!opts.initialClips?.[2];
+        const [clip0, clip1, clip2] = await Promise.all([
           loadFBXClip(opts.initialClips?.[0] ?? DEFAULT_GREET_URL),
           loadFBXClip(opts.initialClips?.[1] ?? DEFAULT_IDLE_URL),
+          has3Stages ? loadFBXClip(opts.initialClips![2]) : Promise.resolve(null),
         ]);
         if (cancelled) return;
 
-        if (greetClip) {
+        // Stage 1 — play immediately
+        if (clip0) {
           currentClipUrl = opts.initialClips?.[0] ?? DEFAULT_GREET_URL;
-          playClipOnMixer(greetClip);
+          playClipOnMixer(clip0);
         }
 
+        // Stage 2 — after cyclesMs
         cycleTimer = setTimeout(() => {
           if (cancelled) return;
-          if (idleClip) {
-            currentClipUrl = opts.initialClips?.[1] ?? DEFAULT_IDLE_URL;
-            playClipOnMixer(idleClip);
+          const stage2Clip = has3Stages ? clip1 : (clip1 ?? null);
+          const stage2Url  = has3Stages
+            ? opts.initialClips![1]
+            : (opts.initialClips?.[1] ?? DEFAULT_IDLE_URL);
+          if (stage2Clip) { currentClipUrl = stage2Url; playClipOnMixer(stage2Clip); }
+
+          // Stage 3 — after cycles2Ms (only when 3 clips provided)
+          if (has3Stages) {
+            cycleTimer = setTimeout(() => {
+              if (cancelled || !clip2) return;
+              currentClipUrl = opts.initialClips![2];
+              playClipOnMixer(clip2);
+            }, opts.cycles2Ms ?? DEFAULT_GREET_DURATION) as unknown as ReturnType<typeof setInterval>;
           }
         }, opts.cyclesMs ?? DEFAULT_GREET_DURATION) as unknown as ReturnType<typeof setInterval>;
       } catch (err) {

@@ -1,49 +1,105 @@
+import { ArchDiagram } from './ArchDiagram';
+
 export interface Project {
-  id: string;
-  thumb?: string;
-  year: string;
-  role: string;
-  badge: string;
-  title: string;
-  desc: string;
-  stack: string[];
-  bullets: { strong: string; rest: string }[];
+  id:       string;
+  featured?: boolean;
+  thumb?:   string;
+  year:     string;
+  role:     string;
+  badge:    string;
+  title:    string;
+  desc:     string;
+  stack:    string[];
+  bullets:  { strong: string; rest: string }[];
 }
 
-interface Props { p: Project; idx: number; total: number; }
-
-export function ProjectCard({ p, idx, total }: Props) {
+// ── Featured card (70% / left) ────────────────────────────────────────────────
+export function FeaturedCard({ p }: { p: Project }) {
   return (
-    <article className="project reveal" data-d={String((idx % 3) + 1)}>
-      <div className="project-thumb">
-        {p.thumb && (
-          <img
-            src={p.thumb}
-            alt={`${p.title} thumbnail`}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }}
-          />
-        )}
-        <span className="badge">{p.badge}</span>
+    <article className="proj-featured reveal" data-d="1">
+
+      {/* Full-width banner image */}
+      <div className="proj-banner">
+        {p.thumb
+          ? <img src={p.thumb} alt={p.title} className="proj-banner-img" />
+          : <div className="proj-banner-empty" />
+        }
+        {/* Badge floats over the image */}
+        <span className="proj-banner-badge">{p.badge}</span>
       </div>
-      <div>
-        <div className="project-meta">
-          <span className="y">{p.year}</span>
-          <span>·</span>
-          <span>{p.role}</span>
-          <span>·</span>
-          <span>0{idx + 1} / 0{total}</span>
+
+      {/* Content body */}
+      <div className="proj-body">
+        <div className="proj-meta">
+          <span className="proj-year">{p.year}</span>
+          <span className="proj-sep">·</span>
+          <span className="proj-role">{p.role}</span>
         </div>
-        <h3 className="project-title">{p.title}</h3>
-        <p className="project-desc">{p.desc}</p>
-        <div className="project-stack">
-          {p.stack.map((s) => <span key={s} className="chip">{s}</span>)}
+
+        <h3 className="proj-title">{p.title}</h3>
+        <p  className="proj-desc">{p.desc}</p>
+
+        {/* Architecture diagram */}
+        <ArchDiagram />
+
+        <div className="proj-footer">
+          <div className="proj-stack">
+            {p.stack.map(s => <span key={s} className="chip">{s}</span>)}
+          </div>
+          <ul className="proj-bullets">
+            {p.bullets.map((b, i) => (
+              <li key={i}>
+                <strong>{b.strong}</strong>
+                <span>{b.rest}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="project-bullets">
-          {p.bullets.map((b, i) => (
-            <li key={i}><span><strong>{b.strong}</strong> — {b.rest}</span></li>
-          ))}
-        </ul>
       </div>
     </article>
   );
+}
+
+// ── Mini card (30% / right) ───────────────────────────────────────────────────
+export function MiniCard({ p, idx }: { p: Project; idx: number }) {
+  return (
+    <article className="proj-mini reveal" data-d={String(idx + 1)}>
+
+      {/* Thumbnail */}
+      <div className="proj-mini-thumb">
+        {p.thumb
+          ? <img src={p.thumb} alt={p.title} className="proj-mini-thumb-img" />
+          : <div className="proj-mini-thumb-empty" />
+        }
+        <span className="proj-badge proj-badge--over">{p.badge}</span>
+      </div>
+
+      {/* Content */}
+      <div className="proj-mini-body">
+        <div className="proj-mini-top">
+          <span className="proj-year">{p.year}</span>
+          <span className="proj-sep">·</span>
+          <span className="proj-role">{p.role}</span>
+        </div>
+
+        <h3 className="proj-mini-title">{p.title}</h3>
+        <p  className="proj-mini-desc">{p.desc}</p>
+
+        <div className="proj-stack proj-stack--mini">
+          {p.stack.slice(0, 4).map(s => <span key={s} className="chip">{s}</span>)}
+          {p.stack.length > 4 && <span className="chip chip--more">+{p.stack.length - 4}</span>}
+        </div>
+
+        <div className="proj-mini-metric">
+          <strong>{p.bullets[0].strong}</strong>
+          <span>{p.bullets[0].rest}</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+// ── Compat default export ─────────────────────────────────────────────────────
+export function ProjectCard({ p, idx }: { p: Project; idx: number; total?: number }) {
+  return p.featured ? <FeaturedCard p={p} /> : <MiniCard p={p} idx={idx} />;
 }

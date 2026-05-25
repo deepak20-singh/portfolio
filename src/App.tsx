@@ -13,8 +13,7 @@ import { About } from './components/sections/About';
 import { Stats } from './components/sections/Stats';
 import { Skills } from './components/sections/Skills';
 import { Projects } from './components/sections/Projects';
-import { Contact } from './components/sections/Contact';
-import { ResumeCTA } from './components/sections/ResumeCTA';
+import { ContactResume } from './components/sections/ContactResume';
 import { Footer } from './components/sections/Footer';
 
 import { TweaksPanel } from './components/tweaks/TweaksPanel';
@@ -67,8 +66,7 @@ export function App() {
         <Stats />
         <Skills />
         <Projects />
-        <Contact />
-        <ResumeCTA />
+        <ContactResume />
         <Footer />
       </main>
 
