@@ -386,47 +386,49 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
   border-radius: var(--radius);
   background: linear-gradient(145deg, rgba(255,255,255,.025) 0%, rgba(255,255,255,0) 60%);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
   transition: border-color .3s, box-shadow .3s;
   position: relative;
   overflow: hidden;
 }
 .proj-featured:hover { border-color: var(--border-strong); box-shadow: 0 8px 40px rgba(0,0,0,.25); }
 
-/* Banner image */
-.proj-banner {
+/* Left preview panel */
+.proj-preview {
+  flex: 0 0 52%;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
   position: relative;
-  width: 100%;
-  height: 220px;
   overflow: hidden;
-  flex-shrink: 0;
 }
-.proj-banner-img {
-  width: 100%; height: 100%;
-  object-fit: cover;
+
+/* Screenshot box — fits image at natural ratio */
+.proj-screenshot {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.07);
+}
+.proj-screenshot img {
+  width: 100%;
+  height: auto;
   display: block;
-  transition: transform .5s ease;
 }
-.proj-featured:hover .proj-banner-img { transform: scale(1.03); }
-/* fade bottom edge into card bg */
-.proj-banner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    transparent 40%,
-    color-mix(in oklab, var(--bg-1) 60%, transparent) 100%
-  );
-  pointer-events: none;
-}
-.proj-banner-empty {
-  width: 100%; height: 100%;
+.proj-screenshot--empty {
+  height: 200px;
   background:
     repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 10px, transparent 10px 20px),
     var(--surface);
 }
-.proj-banner-badge {
+
+/* Badge — top-left of preview */
+.proj-preview-badge {
   position: absolute;
   top: 14px; left: 16px;
   z-index: 2;
@@ -438,13 +440,14 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
   backdrop-filter: blur(8px);
 }
 
-/* Body padding (below banner) */
+/* Right: content body */
 .proj-body {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: 24px 28px 28px;
+  padding: 28px 28px 28px;
   flex: 1;
+  min-width: 0;
 }
 
 .proj-title {
@@ -561,6 +564,36 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
 }
 .proj-mini-metric strong { color: var(--accent); font-size: 13px; font-weight: 600; }
 .proj-mini-metric span   { color: var(--text-mute); }
+
+/* ── Live demo link ── */
+.proj-live-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  color: var(--accent); text-decoration: none;
+  letter-spacing: 0.03em;
+  transition: opacity 0.15s ease;
+}
+.proj-live-link:hover { opacity: 0.7; }
+.proj-footer .proj-live-link {
+  font-size: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+}
+.proj-live-link--mini { margin-top: 8px; }
+
+/* ── Render / hosting warning ── */
+.proj-warning {
+  margin: 4px 0 0;
+  font-family: var(--mono); font-size: 10px;
+  color: var(--text-mute);
+  line-height: 1.5;
+  display: flex; align-items: flex-start; gap: 4px;
+}
+.proj-warning::before {
+  content: "⚠";
+  color: #b45309;   /* amber-700 — visible on both light/dark */
+  flex-shrink: 0;
+}
 
 /* ── Architecture Diagram ── */
 .arch-diagram {

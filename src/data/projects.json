@@ -1,8 +1,27 @@
 [
   {
-    "id": "insurance",
+    "id": "vibecheck",
     "featured": true,
-    "thumb": "https://picsum.photos/seed/insurance-doc/1200/500",
+    "thumb": "/uploads/vibecheck-ui.png",
+    "year": "2025",
+    "role": "Full Stack",
+    "badge": "Live Demo",
+    "title": "vibecheck — Real-Time Emotion Detection",
+    "desc": "Dual-stream emotion engine: MediaPipe blendshapes at 8 fps for instant feedback blended with Groq LLM every 2s for semantic depth — ten emotion channels running live in the browser.",
+    "stack": ["React", "TypeScript", "FastAPI", "MediaPipe", "WebSockets", "Groq"],
+    "link": "https://vibecheck-frontend-opal.vercel.app",
+    "warning": "Backend on Render free tier — first load may take ~30s to wake up.",
+    "bullets": [
+      { "strong": "Dual-stream pipeline",  "rest": "MediaPipe 8fps + Groq LLM in parallel" },
+      { "strong": "10 emotion channels",   "rest": "blendshape-mapped, updating in real-time" },
+      { "strong": "Head pose tracking",    "rest": "ZYX Euler from facial transformation matrix" },
+      { "strong": "Zero storage",          "rest": "all processing client-side or ephemeral" }
+    ]
+  },
+  {
+    "id": "insurance",
+    "featured": false,
+    "thumb": "https://picsum.photos/seed/insurance-doc/800/450",
     "year": "2024 — Present",
     "role": "Backend Engineer",
     "badge": "Flagship",
@@ -31,23 +50,6 @@
       { "strong": "30% reliability lift", "rest": "via structured output validation" },
       { "strong": "Horizontal scale",    "rest": "AWS w/ Dockerised microservices" },
       { "strong": "RAG grounding",       "rest": "reduced hallucinations measurably" }
-    ]
-  },
-  {
-    "id": "session",
-    "featured": false,
-    "thumb": "https://picsum.photos/seed/session-dash/800/450",
-    "year": "2023",
-    "role": "Backend Engineer",
-    "badge": "Internal Tool",
-    "title": "Real-Time Session Management Dashboard",
-    "desc": "Operator dashboard for live session telemetry. RAG-grounded responses, role-based access, and a Redis-driven event bus keeping UI in lockstep with the backend.",
-    "stack": ["Flask", "Redis", "MongoDB", "Microservices", "CI/CD"],
-    "bullets": [
-      { "strong": "<100ms refresh",         "rest": "via Redis caching + pub/sub" },
-      { "strong": "40% fewer hallucinations","rest": "with RAG over domain data" },
-      { "strong": "RBAC",                   "rest": "tightened access governance" },
-      { "strong": "25% drop",               "rest": "in support tickets after launch" }
     ]
   }
 ]

@@ -1,5 +1,3 @@
-import { ArchDiagram } from './ArchDiagram';
-
 export interface Project {
   id:       string;
   featured?: boolean;
@@ -11,6 +9,8 @@ export interface Project {
   desc:     string;
   stack:    string[];
   bullets:  { strong: string; rest: string }[];
+  link?:    string;   // optional live demo / repo URL
+  warning?: string;   // optional caveat shown beneath the link (e.g. cold-start note)
 }
 
 // ── Featured card (70% / left) ────────────────────────────────────────────────
@@ -18,17 +18,18 @@ export function FeaturedCard({ p }: { p: Project }) {
   return (
     <article className="proj-featured reveal" data-d="1">
 
-      {/* Full-width banner image */}
-      <div className="proj-banner">
-        {p.thumb
-          ? <img src={p.thumb} alt={p.title} className="proj-banner-img" />
-          : <div className="proj-banner-empty" />
-        }
-        {/* Badge floats over the image */}
-        <span className="proj-banner-badge">{p.badge}</span>
+      {/* Left: screenshot preview */}
+      <div className="proj-preview">
+        <div className="proj-screenshot">
+          {p.thumb
+            ? <img src={p.thumb} alt={p.title} />
+            : <div className="proj-screenshot--empty" />
+          }
+        </div>
+        <span className="proj-preview-badge">{p.badge}</span>
       </div>
 
-      {/* Content body */}
+      {/* Right: content body */}
       <div className="proj-body">
         <div className="proj-meta">
           <span className="proj-year">{p.year}</span>
@@ -38,9 +39,6 @@ export function FeaturedCard({ p }: { p: Project }) {
 
         <h3 className="proj-title">{p.title}</h3>
         <p  className="proj-desc">{p.desc}</p>
-
-        {/* Architecture diagram */}
-        <ArchDiagram />
 
         <div className="proj-footer">
           <div className="proj-stack">
@@ -54,6 +52,19 @@ export function FeaturedCard({ p }: { p: Project }) {
               </li>
             ))}
           </ul>
+          {p.link && (
+            <a
+              href={p.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="proj-live-link"
+            >
+              ↗ Live demo
+            </a>
+          )}
+          {p.warning && (
+            <p className="proj-warning">{p.warning}</p>
+          )}
         </div>
       </div>
     </article>
@@ -94,6 +105,20 @@ export function MiniCard({ p, idx }: { p: Project; idx: number }) {
           <strong>{p.bullets[0].strong}</strong>
           <span>{p.bullets[0].rest}</span>
         </div>
+
+        {p.link && (
+          <a
+            href={p.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="proj-live-link proj-live-link--mini"
+          >
+            ↗ Live demo
+          </a>
+        )}
+        {p.warning && (
+          <p className="proj-warning">{p.warning}</p>
+        )}
       </div>
     </article>
   );
