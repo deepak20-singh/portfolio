@@ -5,7 +5,7 @@ interface Props {
   extra?: React.ReactNode;
 }
 
-export function SectionHead({ num, label, title, extra }: Props) {
+export function SectionHead({ title, extra }: Props) {
   return (
     <div className="section-head reveal">
       <div>
