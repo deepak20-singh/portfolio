@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 import './chat.css';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type WidgetState = 'closed' | 'open' | 'conversation';
+type BackendStatus = 'checking' | 'ready';
 
 interface Message {
   id: string;
@@ -11,6 +13,14 @@ interface Message {
   sources?: string[];
   streaming?: boolean;
 }
+
+const WARMING_MESSAGES = [
+  'Waking up the server...',
+  'Booting Llama-3.3-70B model...',
+  'Initializing FAISS vector index...',
+  'Preparing context memory...',
+  'Establishing secure link...',
+];
 
 // ── Config ────────────────────────────────────────────────────────────────────
 const API_URL =
@@ -31,9 +41,48 @@ export function ChatWidget() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input,    setInput]    = useState('');
   const [busy,     setBusy]     = useState(false);
+  const [backendStatus, setBackendStatus] = useState<BackendStatus>('checking');
+  const [messageIndex, setMessageIndex] = useState(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef       = useRef<HTMLInputElement>(null);
+
+  // ── Pre-warm Backend on Mount ──────────────────────────────────────────────
+  useEffect(() => {
+    let active = true;
+    let timeoutId: any;
+
+    const checkBackend = async () => {
+      try {
+        const res = await fetch(`${API_URL}/health`);
+        if (res.ok) {
+          if (active) setBackendStatus('ready');
+          return;
+        }
+      } catch (err) {
+        // Ignored, will retry
+      }
+      if (active) {
+        timeoutId = setTimeout(checkBackend, 3000);
+      }
+    };
+
+    checkBackend();
+
+    return () => {
+      active = false;
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // ── Cycle warming messages ──────────────────────────────────────────────────
+  useEffect(() => {
+    if (backendStatus !== 'checking') return;
+    const t = setInterval(() => {
+      setMessageIndex(prev => (prev + 1) % WARMING_MESSAGES.length);
+    }, 4000);
+    return () => clearInterval(t);
+  }, [backendStatus]);
 
   // Scroll to bottom whenever messages update
   useEffect(() => {
@@ -42,11 +91,11 @@ export function ChatWidget() {
 
   // Focus input when panel opens
   useEffect(() => {
-    if (state !== 'closed') {
+    if (state !== 'closed' && backendStatus === 'ready') {
       const t = setTimeout(() => inputRef.current?.focus(), 120);
       return () => clearTimeout(t);
     }
-  }, [state]);
+  }, [state, backendStatus]);
 
   // ── Core send function ─────────────────────────────────────────────────────
   const send = useCallback(async (question: string) => {
@@ -173,8 +222,25 @@ export function ChatWidget() {
         </button>
       </div>
 
+      {/* ── Warming / Checking State ────────────────────────────────────── */}
+      {backendStatus === 'checking' && (
+        <div className="cw-warming">
+          <div className="cw-warming__content">
+            <div className="cw-warming__spinner">
+              <span className="cw-warming__dot-pulse" />
+            </div>
+            <div className="cw-warming__msg-container">
+              <span className="cw-warming__msg">{WARMING_MESSAGES[messageIndex]}</span>
+            </div>
+          </div>
+          <div className="cw-warming__footnote">
+            Note: Deployed on Render's free tier. The server spins down after 15 minutes of inactivity. Waking it up can take up to 30 seconds.
+          </div>
+        </div>
+      )}
+
       {/* ── Open: intro + suggestion chips ────────────────────────────────── */}
-      {state === 'open' && (
+      {backendStatus === 'ready' && state === 'open' && (
         <>
           <div className="cw-intro">
             <div className="cw-intro__av">
@@ -201,7 +267,7 @@ export function ChatWidget() {
       )}
 
       {/* ── Conversation: message thread ─────────────────────────────────── */}
-      {state === 'conversation' && (
+      {backendStatus === 'ready' && state === 'conversation' && (
         <div className="cw-messages" role="log" aria-live="polite">
           {messages.map(m => (
             <div key={m.id} className={`cw-msg cw-msg--${m.role}`}>
@@ -209,7 +275,13 @@ export function ChatWidget() {
                 <div className="cw-msg__av" aria-hidden="true" />
               )}
               <div className="cw-msg__bubble">
-                {m.text}
+                {m.role === 'bot' ? (
+                  <div className="cw-md">
+                    <ReactMarkdown>{m.text}</ReactMarkdown>
+                  </div>
+                ) : (
+                  m.text
+                )}
                 {m.streaming && (
                   <span className="cw-cursor" aria-hidden="true" />
                 )}
@@ -225,32 +297,34 @@ export function ChatWidget() {
         </div>
       )}
 
-      {/* Footer: input bar — always visible */}
-      <form className="cw-footer" onSubmit={handleSubmit}>
-        <div className="cw-input-row">
-          <span className="cw-input-prefix" aria-hidden="true">›</span>
-          <input
-            ref={inputRef}
-            className="cw-input"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder={busy ? 'thinking…' : 'ask…'}
-            disabled={busy}
-            maxLength={500}
-            aria-label="Ask a question"
-          />
-          <button
-            className="cw-send"
-            type="submit"
-            disabled={busy || !input.trim()}
-            aria-label="Send"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-      </form>
+      {/* Footer: input bar — visible only when backend is ready */}
+      {backendStatus === 'ready' && (
+        <form className="cw-footer" onSubmit={handleSubmit}>
+          <div className="cw-input-row">
+            <span className="cw-input-prefix" aria-hidden="true">›</span>
+            <input
+              ref={inputRef}
+              className="cw-input"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder={busy ? 'thinking…' : 'ask…'}
+              disabled={busy}
+              maxLength={500}
+              aria-label="Ask a question"
+            />
+            <button
+              className="cw-send"
+              type="submit"
+              disabled={busy || !input.trim()}
+              aria-label="Send"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      )}
 
     </div>
   );
