@@ -16,6 +16,7 @@ import { Projects } from './components/sections/Projects';
 import { ContactResume } from './components/sections/ContactResume';
 import { Footer } from './components/sections/Footer';
 
+import { ChatWidget } from './components/chat/ChatWidget';
 import { TweaksPanel } from './components/tweaks/TweaksPanel';
 import { TweakSection, TweakToggle, TweakColor, TweakSelect, TweakRadio } from './components/tweaks/controls';
 
@@ -69,6 +70,8 @@ export function App() {
         <ContactResume />
         <Footer />
       </main>
+
+      <ChatWidget />
 
       {import.meta.env.DEV && (
         <TweaksPanel>

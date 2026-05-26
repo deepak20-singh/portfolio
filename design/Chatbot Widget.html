@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Chatbot Widget — Deepak Singh Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg-1: #0c1f2a;
+    --bg-2: #08151c;
+    --surface: #122731;
+    --surface-2: #182f3a;
+    --border: rgba(214, 228, 234, 0.08);
+    --border-strong: rgba(214, 228, 234, 0.16);
+    --text: #e8eef1;
+    --text-dim: #a3b2bb;
+    --text-mute: #6b7d87;
+    --accent: #e07a5f;
+    --accent-soft: rgba(224, 122, 95, 0.14);
+    --accent-glow: rgba(224, 122, 95, 0.35);
+    --ok: #5ad999;
+    --display: 'DM Serif Display', 'Bodoni Moda', serif;
+    --sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --radius: 14px;
+  }
+  html,body{margin:0;padding:0;background:#05101a;color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+
+  /* ====== Stage backdrop (portfolio context) ====== */
+  .stage{
+    position:relative;width:100%;height:100%;overflow:hidden;border-radius:18px;
+    background:
+      radial-gradient(900px 500px at 75% 0%, rgba(224,122,95,.08), transparent 60%),
+      radial-gradient(700px 600px at 0% 70%, rgba(8,21,28,1), transparent 60%),
+      linear-gradient(180deg, #0c1f2a 0%, #08151c 100%);
+  }
+  .page-hint{position:absolute;inset:0;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:rgba(255,255,255,.06);text-transform:uppercase;pointer-events:none}
+  .page-hint .ph-top{position:absolute;top:18px;left:22px}
+  .page-hint .ph-mid{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--display);font-size:84px;letter-spacing:-.02em;color:rgba(241,246,248,.04);white-space:nowrap}
+  .page-hint .ph-bot{position:absolute;bottom:18px;right:22px}
+  .page-hint .ph-rail{position:absolute;left:18px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;letter-spacing:.4em;color:rgba(255,255,255,.05)}
+
+  .anchor-br{position:absolute;right:24px;bottom:24px;z-index:5}
+
+  /* ====== Closed: Avatar bubble ====== */
+  .fab-avatar{
+    position:relative;width:64px;height:64px;border-radius:50%;
+    background:linear-gradient(180deg, var(--surface-2), var(--surface));
+    border:1px solid var(--border-strong);
+    box-shadow:0 18px 50px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.03);
+    display:grid;place-items:center;cursor:pointer;
+  }
+  .fab-avatar .ring{position:absolute;inset:-6px;border-radius:50%;border:1px solid rgba(224,122,95,.25);animation:slow-pulse 3.4s ease-out infinite}
+  .fab-avatar .ring.r2{inset:-12px;animation-delay:1.2s;opacity:.6}
+  @keyframes slow-pulse{
+    0%{transform:scale(.92);opacity:.5}
+    60%{opacity:.15}
+    100%{transform:scale(1.18);opacity:0}
+  }
+  .fab-avatar .pic{
+    width:54px;height:54px;border-radius:50%;
+    background:
+      radial-gradient(circle at 50% 38%, #b6a092 0%, #6a5446 55%, #2c2723 100%),
+      var(--surface);
+    position:relative;overflow:hidden;
+  }
+  .fab-avatar .pic::before{
+    /* glasses + face hint */
+    content:'';position:absolute;left:50%;top:46%;transform:translateX(-50%);
+    width:34px;height:9px;border-radius:4px;
+    background:linear-gradient(90deg, transparent 0 6px, #0c1014 6px 14px, transparent 14px 20px, #0c1014 20px 28px, transparent 28px);
+  }
+  .fab-avatar .status{
+    position:absolute;right:1px;bottom:1px;width:14px;height:14px;border-radius:50%;background:var(--ok);
+    border:3px solid var(--bg-1);
+  }
+  .fab-avatar .tag{
+    position:absolute;right:74px;top:50%;transform:translateY(-50%);
+    background:rgba(8,21,28,.85);backdrop-filter:blur(8px);
+    border:1px solid var(--border-strong);border-radius:999px;
+    padding:8px 14px;font-family:var(--mono);font-size:11px;color:var(--text-dim);
+    white-space:nowrap;letter-spacing:.04em;
+  }
+  .fab-avatar .tag b{color:var(--text);font-weight:500}
+  .fab-avatar .tag::after{
+    content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%) rotate(45deg);
+    width:8px;height:8px;background:rgba(8,21,28,.85);border-right:1px solid var(--border-strong);border-top:1px solid var(--border-strong);
+  }
+
+  /* ====== Open: Compact panel ====== */
+  .panel{
+    position:absolute;right:24px;bottom:24px;
+    width:340px;height:480px;
+    background:linear-gradient(180deg, rgba(18,39,49,.92), rgba(8,21,28,.96));
+    border:1px solid var(--border-strong);
+    border-radius:20px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(224,122,95,.05) inset;
+    display:flex;flex-direction:column;overflow:hidden;
+    backdrop-filter:blur(20px);
+  }
+  .panel::before{
+    content:'';position:absolute;inset:-1px;border-radius:20px;pointer-events:none;
+    background:radial-gradient(400px 200px at 80% 0%, rgba(224,122,95,.18), transparent 60%);
+    opacity:.7;mix-blend-mode:screen;
+  }
+
+  /* panel header */
+  .ph{position:relative;padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;z-index:1}
+  .ph .dots{display:flex;gap:6px}
+  .ph .dots i{width:9px;height:9px;border-radius:50%;display:block}
+  .ph .dots i:nth-child(1){background:#e0625a}
+  .ph .dots i:nth-child(2){background:#e0b35a}
+  .ph .dots i:nth-child(3){background:#5ad999}
+  .ph .ttl{font-family:var(--mono);font-size:11px;color:var(--text-mute);letter-spacing:.08em;flex:1}
+  .ph .ttl b{color:var(--text-dim);font-weight:500}
+  .ph .min{width:18px;height:18px;display:grid;place-items:center;color:var(--text-mute);cursor:pointer;border-radius:4px}
+  .ph .min:hover{color:var(--text)}
+
+  /* greeting */
+  .intro{padding:18px 18px 6px;position:relative;z-index:1}
+  .intro .av{
+    display:flex;align-items:center;gap:12px;margin-bottom:14px;
+    font-family:var(--mono);font-size:11px;color:var(--text-mute);letter-spacing:.06em;
+  }
+  .intro .av .av-pic{
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 50% 38%, #b6a092 0%, #6a5446 55%, #2c2723 100%);
+    position:relative;flex-shrink:0;border:1px solid var(--border-strong);
+  }
+  .intro .av .av-pic::after{
+    content:'';position:absolute;left:50%;top:48%;transform:translateX(-50%);
+    width:18px;height:5px;border-radius:2.5px;
+    background:linear-gradient(90deg, transparent 0 3px, #0c1014 3px 7px, transparent 7px 11px, #0c1014 11px 15px, transparent 15px);
+  }
+  .intro .av .stat{display:flex;align-items:center;gap:6px}
+  .intro .av .stat .d{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+  .intro h2{
+    font-family:var(--display);font-weight:400;font-size:22px;line-height:1.15;
+    margin:0 0 8px;color:var(--text);letter-spacing:-.01em;
+  }
+  .intro h2 em{font-style:italic;color:var(--accent)}
+  .intro p{font-size:13px;line-height:1.55;color:var(--text-dim);margin:0}
+
+  /* suggestion chips */
+  .sugs{padding:6px 18px 14px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1}
+  .sugs .sug{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:11px 14px;border:1px solid var(--border);border-radius:12px;
+    background:rgba(255,255,255,.015);cursor:pointer;transition:all .2s;
+    font-size:13px;color:var(--text-dim);text-align:left;
+  }
+  .sugs .sug:hover{border-color:var(--accent);color:var(--text);background:var(--accent-soft)}
+  .sugs .sug .arrow{color:var(--text-mute);font-family:var(--mono);font-size:13px}
+  .sugs .sug:hover .arrow{color:var(--accent)}
+
+  /* footer input */
+  .pf{padding:12px 14px;border-top:1px solid var(--border);position:relative;z-index:1;background:rgba(8,21,28,.6)}
+  .pf .row{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border-strong);border-radius:14px;background:rgba(255,255,255,.02);transition:border-color .2s}
+  .pf .row:focus-within{border-color:var(--accent)}
+  .pf .prefix{font-family:var(--mono);color:var(--accent);font-size:13px}
+  .pf input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-family:var(--sans);font-size:13.5px}
+  .pf input::placeholder{color:var(--text-mute)}
+  .pf .send{
+    width:30px;height:30px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+    background:var(--accent);color:#1a0c08;border:0;
+  }
+  .pf .send svg{width:14px;height:14px}
+
+  .caption{position:absolute;left:18px;bottom:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mute)}
+  .caption b{color:var(--text-dim);font-weight:500}
+
+  dc-section{background:transparent}
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+function Stage({ children }) {
+  return (
+    <div className="stage">
+      <div className="page-hint">
+        <div className="ph-rail">DEEPAK · SINGH · 2026</div>
+        <div className="ph-top">› HOME · ABOUT · SKILLS · WORK · CONTACT</div>
+        <div className="ph-mid">DEEPAK</div>
+        <div className="ph-bot">● AVAILABLE · BENGALURU 12:32 IST</div>
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function ClosedAvatarBubble() {
+  return (
+    <Stage>
+      <div className="anchor-br">
+        <div className="fab-avatar">
+          <span className="ring"></span>
+          <span className="ring r2"></span>
+          <div className="pic"></div>
+          <span className="status"></span>
+          <div className="tag"><b>Ask me</b> anything →</div>
+        </div>
+      </div>
+      <div className="caption"><b>Closed</b> · avatar bubble · ambient online state</div>
+    </Stage>
+  );
+}
+
+function OpenCompact() {
+  return (
+    <Stage>
+      <div className="panel">
+        <div className="ph">
+          <div className="dots"><i></i><i></i><i></i></div>
+          <div className="ttl"><b>ask</b>.deepak</div>
+          <div className="min">×</div>
+        </div>
+
+        <div className="intro">
+          <div className="av">
+            <div className="av-pic"></div>
+            <div className="stat"><span className="d"></span>Online · grounded on his portfolio</div>
+          </div>
+          <h2>Hey — what's up?</h2>
+        </div>
+
+        <div className="sugs">
+          <div className="sug">Tell me about his AI work <span className="arrow">→</span></div>
+          <div className="sug">Is he hiring / open to roles? <span className="arrow">→</span></div>
+          <div className="sug">Show one cool project <span className="arrow">→</span></div>
+        </div>
+
+        <div style={{flex:1}}></div>
+
+        <div className="pf">
+          <div className="row">
+            <span className="prefix">›</span>
+            <input placeholder="ask…" />
+            <button className="send" aria-label="send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="caption"><b>Open</b> · compact panel · low-commitment entry</div>
+    </Stage>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas title="Chatbot Widget · Deepak Singh Portfolio" subtitle="Closed avatar bubble + compact open panel — on the portfolio's existing tokens">
+      <DCSection id="widget" title="Widget" subtitle="Two states — what sits in the corner, and what opens when you tap it">
+        <DCArtboard id="closed" label="Closed · avatar bubble" width={420} height={300}>
+          <ClosedAvatarBubble />
+        </DCArtboard>
+        <DCArtboard id="open" label="Open · compact panel" width={420} height={580}>
+          <OpenCompact />
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
