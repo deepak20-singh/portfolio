@@ -198,9 +198,11 @@ export function Hero() {
             </div>
             <div className="col right reveal" data-d="3">
               <strong>Software Engineer @ Openstream.ai</strong><br />
-              Exploring how AI and real-time systems can merge
-              into something that feels less like software
-              and more like conversation.
+              <span className="col-desc">
+                Exploring how AI and real-time systems can merge
+                into something that feels less like software
+                and more like conversation.
+              </span>
             </div>
           </div>
 

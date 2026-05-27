@@ -318,7 +318,7 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
 /* ── Skills ── */
 .skills-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; padding: 0 150px 0 50px; }
 .skill-cat {
-  grid-column: span 4; padding: 50px; border: 1px solid var(--border);
+  grid-column: span 12; padding: 50px; border: 1px solid var(--border);
   border-radius: var(--radius); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
   transition: all .3s ease; position: relative; overflow: hidden;
 }
@@ -340,8 +340,8 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
 }
 .chip:hover { color: var(--text); border-color: var(--accent); background: var(--accent-soft); }
 
-.skill-cat.wide { grid-column: span 6; }
-.skill-cat.half { grid-column: span 6; }
+.skill-cat.wide { grid-column: span 12; }
+.skill-cat.half { grid-column: span 12; }
 
 /* ── Stats ── */
 .stats-strip { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
