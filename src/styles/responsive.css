@@ -1,4 +1,4 @@
-@media (max-width: 980px) {
+@media (max-width: 1000px) {
   main { padding-left: 0; }
 .about-grid { grid-template-columns: 1fr; }
   .about-photo { max-width: 260px; }
@@ -21,8 +21,15 @@
   nav.top { display: none; }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 1000px) {
   .container { padding: 0 18px; }
+
+  .hero .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
 
   /* ── Hero: V1 Classic Stacked ── */
   .hero {
@@ -37,25 +44,30 @@
   .status { display: none; }
   .hero-mob-topbar { display: flex; }
 
-  /* Stack avatar + name vertically */
+  /* Stack avatar + name vertically, push name/tag to the bottom */
   .hero-grid {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     min-height: 0;
     flex: 1;
     align-items: stretch;
     position: relative;
+    padding-bottom: 24px;
   }
 
-  /* Avatar: full-width block above the name */
+  /* Avatar: full-screen absolute background layer */
   .hero-avatar {
-    position: relative;
-    left: auto; top: auto;
-    width: 100%; height: 72vh;
+    position: absolute;
+    top: -50px;
+    left: -18px;
+    width: 100vw;
+    height: 100svh;
     max-height: none;
     flex-shrink: 0;
     margin: 0;
     padding: 0;
+    z-index: 1;
   }
   .hero-avatar.reveal       { transform: translateY(20px); }
   .hero-avatar.reveal.in    { transform: translateY(0); }
@@ -68,14 +80,31 @@
   }
   .hero-avatar .avatar-frame::after { display: none; }
 
-  /* Animate button: top-right on mobile too */
+  /* Animate button: top-right below the status pill on mobile */
   .hero-avatar-controls {
     position: absolute;
-    top: 14px;
+    top: 20px;
     right: 14px;
     bottom: auto;
     left: auto !important;
     transform: none !important;
+    z-index: 6;
+  }
+  .hero-ctrl-btn {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .hero-ctrl-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+  .hero-ctrl-btn .hero-btn-text {
+    display: none;
   }
 
   /* Name: stacked vertically, left-aligned */
@@ -86,7 +115,7 @@
     align-items: flex-start;
     justify-content: flex-start;
     text-align: left;
-    font-size: clamp(72px, 20vw, 84px);
+    font-size: clamp(48px, 15vw, 76px);
     line-height: .84;
     gap: 0;
     width: 100%;
@@ -98,11 +127,11 @@
   .hero-name .w2 { color: var(--accent); font-style: italic; }
   .hero-name .w2::after { content: '.'; }
 
-  /* Footer row: single left-aligned column */
+  /* Footer row: single left-aligned column pushed to bottom */
   .hero-foot {
     display: flex;
     flex-direction: column;
-    margin-top: 30px;
+    margin-top: auto;
     margin-bottom: -12px;
     gap: 8px;
     padding: 0;

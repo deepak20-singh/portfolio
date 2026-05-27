@@ -46,6 +46,19 @@ export function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef       = useRef<HTMLInputElement>(null);
+  const panelRef       = useRef<HTMLDivElement>(null);
+
+  // Close chatbot when clicked outside the container
+  useEffect(() => {
+    if (state === 'closed') return;
+    function handleOutsideClick(e: MouseEvent) {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setState('closed');
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [state]);
 
   // ── Pre-warm Backend on Mount ──────────────────────────────────────────────
   useEffect(() => {
@@ -205,7 +218,7 @@ export function ChatWidget() {
 
   // ── Open / Conversation state: panel ──────────────────────────────────────
   return (
-    <div className="cw-panel" role="dialog" aria-label="Portfolio chat">
+    <div ref={panelRef} className="cw-panel" role="dialog" aria-label="Portfolio chat">
 
       {/* Header — macOS dots + title + close */}
       <div className="cw-panel__header">

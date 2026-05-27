@@ -165,7 +165,7 @@ section { position: relative; z-index: 1; padding: calc(120px * var(--density)) 
 .hero-avatar { pointer-events: none; }
 .hero-avatar-controls {
   position: absolute;
-  top: 80px; /* clears the fixed status pill (24px top + ~36px height + 20px gap) */
+  top: 70px; /* clears the fixed status pill (24px top + ~36px height + 20px gap) */
   right: 28px;
   bottom: auto;
   left: auto;

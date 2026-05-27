@@ -147,45 +147,45 @@ export function Hero() {
                   </Suspense>
                 : <div className="avatar-3d" />
               }
+            </div>
+          </div>
 
-              {/* Animation picker control */}
-              <div className="hero-avatar-controls">
-                <div className="hero-ctrl-wrap">
-                  <button
-                    ref={animBtnRef}
-                    className={`hero-ctrl-btn${pickerOpen ? ' active' : ''}`}
-                    onClick={() => setPickerOpen(o => !o)}
-                    aria-label="Change animation"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polygon points="5,3 19,12 5,21" />
-                    </svg>
-                    Animate
-                  </button>
+          {/* Animation picker control */}
+          <div className="hero-avatar-controls">
+            <div className="hero-ctrl-wrap">
+              <button
+                ref={animBtnRef}
+                className={`hero-ctrl-btn${pickerOpen ? ' active' : ''}`}
+                onClick={() => setPickerOpen(o => !o)}
+                aria-label="Change animation"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polygon points="5,3 19,12 5,21" />
+                </svg>
+                <span className="hero-btn-text">Animate</span>
+              </button>
 
-                  {pickerOpen && (
-                    <div ref={pickerRef} className="anim-picker">
-                      {ANIM_GROUPS.map(group => (
-                        <div key={group} className="anim-picker-group">
-                          <div className="anim-group-label">{group}</div>
-                          <div className="anim-picker-items">
-                            {ANIMATIONS.filter(a => a.group === group).map(anim => (
-                              <button
-                                key={anim.url}
-                                className={`anim-picker-item${activeAnim === anim.url ? ' active' : ''}`}
-                                onClick={() => handlePlayAnim(anim)}
-                                title={`plays for ${anim.duration / 1000}s`}
-                              >
-                                {anim.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
+              {pickerOpen && (
+                <div ref={pickerRef} className="anim-picker">
+                  {ANIM_GROUPS.map(group => (
+                    <div key={group} className="anim-picker-group">
+                      <div className="anim-group-label">{group}</div>
+                      <div className="anim-picker-items">
+                        {ANIMATIONS.filter(a => a.group === group).map(anim => (
+                          <button
+                            key={anim.url}
+                            className={`anim-picker-item${activeAnim === anim.url ? ' active' : ''}`}
+                            onClick={() => handlePlayAnim(anim)}
+                            title={`plays for ${anim.duration / 1000}s`}
+                          >
+                            {anim.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  )}
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
